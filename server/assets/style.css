@@ -1,0 +1,45 @@
+body {
+    text-align: center;
+    font-family: sans-serif;
+    color: white;
+    background-color: #023;
+    margin: 0;
+}
+
+#login {
+    color: #e0e3ff;
+    background-color: #5865f2;
+    font-weight: bold;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+#login img {
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+#login:hover {
+    filter: brightness(0.85);
+}
+
+#topbar {
+    background-color: #456;
+    display: flex;
+    gap: 20px;
+}
+
+#topbar strong {
+    margin: 0;
+    font-size: 1.4em;
+    padding: 10px;
+}
+
+#topbar a {
+    color: white;
+    padding: 10px;
+    font-size: 1.4em;
+}

@@ -1,16 +1,17 @@
 {
     "compilerOptions": {
         "outDir": "./run/",
+        "sourceMap": true,
         "strict": true,
         "noImplicitReturns": true,
         "noImplicitAny": true,
-        "module": "ESNext",
-        "moduleResolution": "node",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
         "target": "ESNext",
         "allowJs": true,
         "esModuleInterop": true,
         "lib": [
-            "ESNext"
+            "ES2023"
         ]
     },
     "include": [
