@@ -1,6 +1,8 @@
 node_modules
+tools
 package-lock.json
 */**/package-lock.json
 */**/dist
 */**/run
 */**/config.json
+*/**/bundle.js

@@ -1,19 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const devMode = process.env.NODE_ENV !== "production";
-
-const plugins = [
-  new HtmlWebpackPlugin({
-    template: 'src/index.html',
-    filename: 'index.html',
-    force: true
-  })
-];
-
-if (!devMode) {
-  plugins.push(new MiniCssExtractPlugin());
-}
 
 const config = {
   //devtool: 'eval-source-map',
@@ -22,6 +7,7 @@ const config = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    clean: true
   },
   devServer: {
     static: {
@@ -41,22 +27,15 @@ const config = {
         test: /\.png$/,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/[hash][ext][query]'
+          filename: 'resource/[hash][ext][query]'
         }
       },
       {
         test: /\.json$/,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/[hash][ext][query]'
+          filename: 'resource/[hash][ext][query]'
         }
-      },
-      {
-        test: /\.css$/,
-        use: [
-          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader'
-        ]
       },
       {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
@@ -78,9 +57,7 @@ const config = {
       '.ts',
       '.js'
     ]
-  },
-
-  plugins: plugins
+  }
 };
 
 module.exports = config;

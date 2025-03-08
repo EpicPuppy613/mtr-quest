@@ -2,7 +2,7 @@ import { request } from 'undici';
 import { readFileSync } from 'fs';
 import { APIGuildMember, APIUser, RESTPostOAuth2AccessTokenResult } from 'discord.js';
 import { createHash } from 'crypto';
-const { clientId, clientSecret, port } = JSON.parse(readFileSync('config.json', 'utf-8')) as {clientId: string, clientSecret: string, port: number};
+const { clientId, clientSecret } = JSON.parse(readFileSync('config.json', 'utf-8')) as {clientId: string, clientSecret: string};
 
 export async function exchangeAccessToken(code: string): Promise<RESTPostOAuth2AccessTokenResult | null> {
     try {
@@ -79,7 +79,7 @@ export async function endAuth(accessToken: string): Promise<void> {
     }
 }
 
-export function generateSessionToken(userId: string, sessionKey: string) {
-    let string = `${userId}:${sessionKey}`;
+export function generateSessionToken(userId: string, key1: string, key2: string) {
+    let string = `${userId}:${key1}::${key2}`;
     return createHash('md5').update(string).digest();
 }

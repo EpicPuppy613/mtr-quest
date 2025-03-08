@@ -28,16 +28,25 @@
 
 ### Session Storage
 
-Table `sessions`
-
-**Fields:**
-- `session_id`: BINARY(16) // Unique session identifier
-- `user_id`: BIGINT // Discord user ID
-- `access_token`: TINYTEXT // Discord access token
-- `refresh_token`: TINYTEXT // Discord refresh token
-- `expires_at`: INT // Token expiration time
-- `session_key`: SMALLINT // Used to generate session cookie
+**Table `sessions`**
+- `SSID`: BINARY(16) // Unique session identifier
+- `discordID`: BIGINT // Discord user ID
+- `session_key`: INT // Used to generate session cookie
+- `expires`: INT // Session expiration time
 - `builder`: BOOLEAN // User has builders role
+
+### Point storage
+
+**Table `locations`**
+- `locID`: SMALLINT // Unique location identifier
+- `name`: TINYTEXT // Location name
+- `type`: CHAR(1) // Location type (A, B, C, D)
+- `notes`: TEXT // Location notes
+
+**Table `loc_owners`**, multi-to-multi relationship
+- `locID`: SMALLINT // Location identifier
+- `ownerIndex`: BIGINT // Index of owner within location
+- `ownerID`: BIGINT // Discord user ID
 
 ## Routes
 
@@ -61,7 +70,6 @@ Table `sessions`
 2. -> Invalid
     1. Redirect user to landing page
 3. Show user app page
-
 
 ### Management Page (`/manage`)
 

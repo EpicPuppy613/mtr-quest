@@ -6,6 +6,11 @@ body {
     margin: 0;
 }
 
+a {
+    color: white;
+}
+
+/* Login Button */
 #login {
     color: #e0e3ff;
     background-color: #5865f2;
@@ -16,30 +21,63 @@ body {
     display: inline-block;
     text-decoration: none;
 }
-
 #login img {
     vertical-align: middle;
     margin-left: 4px;
 }
-
 #login:hover {
     filter: brightness(0.85);
 }
 
+/* Top Bar */
 #topbar {
     background-color: #456;
     display: flex;
     gap: 20px;
 }
-
 #topbar strong {
     margin: 0;
-    font-size: 1.4em;
+    font-size: 1.4rem;
     padding: 10px;
 }
-
 #topbar a {
     color: white;
+    text-decoration: none;
     padding: 10px;
-    font-size: 1.4em;
+    font-size: 1.4rem;
+}
+
+/* Location List Table */
+#list-menu table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+@media screen and (min-width: 800px) {
+    #list-menu {
+        width: 80%;
+        margin: 20px auto;
+    }
+}
+#list-menu td, th {
+    border: 1px solid #379;
+}
+#list-header {
+    background-color: #379;
+}
+.list-type-a {
+    background-color: #722;
+}
+.list-type-b {
+    background-color: #772;
+}
+.list-type-c {
+    background-color: #272;
+}
+.list-type-d {
+    background-color: #267;
+}
+
+.hover {
+    text-decoration: dotted underline;
 }
