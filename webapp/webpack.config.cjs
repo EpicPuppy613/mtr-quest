@@ -1,9 +1,20 @@
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
+/** @type {import('webpack').Configuration} */
 const config = {
   //devtool: 'eval-source-map',
   name: 'default',
   entry: './src/index.ts',
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          keep_fnames: true
+        }
+      })
+    ]
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -18,6 +29,11 @@ const config = {
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
       {
         test: /\.js$/,
         use: 'babel-loader',

@@ -29,11 +29,11 @@ export class Database {
     }
 
     // SESSIONS AND AUTHORIZATION
-    async addSession(ssid: Buffer, userId: string, key1: string, key2: string, builder: boolean) {
+    async addSession(ssid: Buffer, userId: string, key1: string, key2: string, builder: boolean, discordName: string, discordAvatar: string | null) {
         if (this.connection === undefined) await this.connection;
         await this.connection?.query(
-            'INSERT INTO sessions (SSID, discordID, sessionKey, sessionKey2, builder, expires) VALUES (?, ?, ?, ?, ?, ?)', 
-            [ssid, userId, key1, key2, builder, Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7]
+            'INSERT INTO sessions (SSID, discordID, sessionKey, sessionKey2, builder, expires, discordName, discordAvatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+            [ssid, userId, key1, key2, builder, Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, discordName, discordAvatar]
         ); 
     }
     async checkSession(ssid: string) {
@@ -105,7 +105,7 @@ export class Database {
     }
     async getNotes(locId: string) {
         if (this.connection === undefined) await this.connection;
-        const notes = await this.connection?.query('SELECT notes FROM locations WHERE locID = ? LIMIT 1', [locId]);
+        const notes = await this.connection?.query('SELECT name, notes FROM locations WHERE locID = ? LIMIT 1', [locId]);
         const rows: RowDataPacket[] = notes ? notes[0] as RowDataPacket[] : [];
         return rows[0];
     }

@@ -36,7 +36,7 @@ app.get('/', async ({ query, cookies }, response) => {
             await endAuth(accessToken.access_token);
             const keys = crypto.getRandomValues(new Uint32Array(2));
             const session = generateSessionToken(user.id, keys[0].toString(), keys[1].toString());
-            db.addSession(session, user.id, keys[0].toString(), keys[1].toString(), member.roles.includes('998873642119208981'));
+            db.addSession(session, user.id, keys[0].toString(), keys[1].toString(), member.roles.includes('998873642119208981'), user.username, user.avatar);
             response.cookie('ssid', session.toString('hex'), { maxAge: accessToken.expires_in * 1000 });
             response.redirect('/home');
             return;
