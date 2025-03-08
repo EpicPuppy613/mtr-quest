@@ -61,6 +61,18 @@ button:hover {
     padding: 10px;
     font-size: 1.4rem;
 }
+#user-info {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+#user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-left: 6px;
+}
 
 /* Location List Table */
 #list-menu table {

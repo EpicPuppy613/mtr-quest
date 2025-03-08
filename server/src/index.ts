@@ -39,6 +39,7 @@ app.get('/', async ({ query, cookies }, response) => {
             db.addSession(session, user.id, keys[0].toString(), keys[1].toString(), member.roles.includes('998873642119208981'), user.username, user.avatar);
             response.cookie('ssid', session.toString('hex'), { maxAge: accessToken.expires_in * 1000 });
             response.redirect('/home');
+            console.log(`[${new Date().toISOString()}] New session: ${session.toString('hex').substring(0, 6)}.. for ${user.username} (${user.id}) ${member.roles.includes('998873642119208981') ? '- Builder' : ''}`);
             return;
         }
     
@@ -82,7 +83,6 @@ app.use('/assets', express.static('assets'));
 
 app.get('/api/locations', async ({ cookies }, response) => {
     if (!cookies || !cookies.ssid) {
-        console.log("no cookie");
         response.status(401).send('Unauthorized');
         return;
     }
@@ -98,7 +98,6 @@ app.get('/api/locations', async ({ cookies }, response) => {
 
 app.get('/api/notes', async ({ query, cookies }, response) => {
     if (!cookies || !cookies.ssid) {
-        console.log("no cookie");
         response.status(401).send('Unauthorized');
         return;
     }
@@ -117,4 +116,18 @@ app.get('/api/notes', async ({ query, cookies }, response) => {
     return;
 });
 
-app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
+app.get('/api/user', async ({ cookies }, response) => {
+    if (!cookies || !cookies.ssid) {
+        response.status(401).send('Unauthorized');
+        return;
+    }
+    const user = await db.getUserInfo(cookies.ssid);
+    if (!user) {
+        response.status(401).send('Unauthorized');
+        return;
+    }
+    response.json(user);
+    return;
+});
+
+app.listen(port, () => console.log(`[${new Date().toISOString()}] App listening at http://localhost:${port}`));

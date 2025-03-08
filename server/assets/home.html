@@ -8,6 +8,10 @@
 		<div id="topbar">
             <strong><a href="home">MTR Quest</a></strong>
             <a href="manage">Builders</a>
+            <div id="user-info">
+                <span id="user-name"></span>
+                <img id="user-avatar" src="" />
+            </div>
 		</div>
 		<h3 id="info">Welcome!</h3>
 		<p id="unauthorized" style="display:none;color:red;">You are not authorized to access this page. It is for builders only.</p>
@@ -15,6 +19,7 @@
 			If you are a visitor, this site is a work in progress, please come back later.<br>
 			<strong>If you are a builder, please navigate to <a href="manage">Builders</a> to continue.</strong>
 		</p>
+        <script src="assets/user.js"></script>
 		<script>
 			window.onload = () => {
 				if (window.location.hash.includes("unauthorized")) {

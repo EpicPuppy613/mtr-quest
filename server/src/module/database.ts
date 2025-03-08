@@ -90,6 +90,21 @@ export class Database {
     }
 
     // DATA CALLS
+    async getUserInfo(ssid: string) {
+        if (typeof ssid !== "string" || ssid.length !== 32) return false;
+        if (this.connection === undefined) await this.connection;
+        const result = await this.connection?.query('SELECT discordID, discordName, discordAvatar, expires FROM sessions WHERE SSID = ? LIMIT 1', [Buffer.from(ssid, 'hex')]);
+        const rows: RowDataPacket[] = result ? result[0] as RowDataPacket[] : [];
+        // assume first session
+        const session = rows[0];
+        if (!session) return false;
+        // check to make sure session is not expired
+        if (session && parseInt(session.expires) < Math.floor(Date.now() / 1000)) {
+            this.dropSession(ssid);
+            return false;
+        }
+        return session;
+    }
     async getLocations(builderId: string) {
         if (this.connection === undefined) await this.connection;
         const locationIds = await this.connection?.query('SELECT locID FROM loc_owners WHERE ownerID = ?', [builderId]);
