@@ -13,7 +13,7 @@ export async function exchangeAccessToken(code: string): Promise<RESTPostOAuth2A
                 client_secret: clientSecret,
                 code: code as string,
                 grant_type: 'authorization_code',
-                redirect_uri: `http://localhost:8080`,
+                redirect_uri: `https://quest.epicpuppy.dev`,
                 scope: 'identify',
             }).toString(),
             headers: {
