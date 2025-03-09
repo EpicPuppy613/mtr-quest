@@ -14,6 +14,12 @@
             </div>
         </div>
         <div id="list-menu">
+            <div id="list-settings">
+                <input id="list-show-all" type="checkbox">
+                <label for="list-show-all">Show all locations</label>
+                <br>
+                <button id="list-refresh" onclick="updateTable()">Refresh</button>
+            </div>
             <table>
                 <thead>
                     <tr id="list-header">
@@ -37,7 +43,7 @@
             <p id="notes-content"></p>
             <button id="notes-close">Close</button>
         </div>
-        <script src="assets/user.js"></script>
+        <footer>MTR Quest Dashboard v0.1.1</footer>
         <script src="assets/bundle.js" type="module" defer></script>
     </body>
 </html>

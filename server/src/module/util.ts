@@ -2,7 +2,7 @@ import { request } from 'undici';
 import { readFileSync } from 'fs';
 import { APIGuildMember, APIUser, RESTPostOAuth2AccessTokenResult } from 'discord.js';
 import { createHash } from 'crypto';
-const { clientId, clientSecret } = JSON.parse(readFileSync('config.json', 'utf-8')) as {clientId: string, clientSecret: string};
+const { clientId, clientSecret, devMode } = JSON.parse(readFileSync('config.json', 'utf-8')) as {clientId: string, clientSecret: string, devMode: boolean};
 
 export async function exchangeAccessToken(code: string): Promise<RESTPostOAuth2AccessTokenResult | null> {
     try {
@@ -13,7 +13,7 @@ export async function exchangeAccessToken(code: string): Promise<RESTPostOAuth2A
                 client_secret: clientSecret,
                 code: code as string,
                 grant_type: 'authorization_code',
-                redirect_uri: `https://quest.epicpuppy.dev`,
+                redirect_uri: devMode ? `http://localhost:8080` : `https://quest.epicpuppy.dev`,
                 scope: 'identify',
             }).toString(),
             headers: {

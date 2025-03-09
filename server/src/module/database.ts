@@ -105,9 +105,9 @@ export class Database {
         }
         return session;
     }
-    async getLocations(builderId: string) {
+    async getLocations(builderId: string, showAll: boolean = false) {
         if (this.connection === undefined) await this.connection;
-        const locationIds = await this.connection?.query('SELECT locID FROM loc_owners WHERE ownerID = ?', [builderId]);
+        const locationIds = await this.connection?.query(`SELECT locID FROM loc_owners${showAll ? "" : ` WHERE ownerID = ${builderId}`}`);
         const ids: RowDataPacket[] = locationIds ? locationIds[0] as RowDataPacket[] : [];
         if (ids.length === 0) return [];
         const idList = ids.map((id) => id.locID);

@@ -81,7 +81,7 @@ app.use('/assets', express.static('assets'));
 
 // API ENDPOINTS
 
-app.get('/api/locations', async ({ cookies }, response) => {
+app.get('/api/locations', async ({ cookies, headers }, response) => {
     if (!cookies || !cookies.ssid) {
         response.status(401).send('Unauthorized');
         return;
@@ -91,7 +91,11 @@ app.get('/api/locations', async ({ cookies }, response) => {
         response.status(401).send('Unauthorized');
         return;
     }
-    const locations = await db.getLocations(user);
+    let showAll = false;
+    if (headers) {
+        showAll = headers['show-all'] === '1';
+    }
+    const locations = await db.getLocations(user, showAll);
     response.json(locations);
     return;
 });

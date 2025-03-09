@@ -6,3 +6,4 @@ package-lock.json
 */**/run
 */**/config.json
 */**/bundle.js
+*/**/devmode

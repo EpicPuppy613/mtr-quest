@@ -1,3 +1,7 @@
+const table = document.getElementById('list-body') as HTMLTableSectionElement;
+const inputShowAll = document.getElementById('list-show-all') as HTMLInputElement;
+let user = '';
+
 async function viewNotes(locId: number) {
     const notes = await fetch(`/api/notes?id=${locId}`, {
         method: 'GET',
@@ -12,44 +16,59 @@ async function viewNotes(locId: number) {
     notesContent.innerHTML = notesData.notes;
 }
 
-async function main() {
-    const table = document.getElementById('list-body');
+async function updateTable() {
+    table.innerHTML = '';
+    const showAll = inputShowAll.checked;
     const locations = await fetch('/api/locations', {
         method: 'GET',
         credentials: 'same-origin',
+        headers: {
+            'show-all': showAll ? '1' : '0',
+        }
     });
     const locationsData = await locations.json();
     for (const location of locationsData) {
         const row = document.createElement('tr');
-        const id = document.createElement('td');
-        const name = document.createElement('td');
-        const type = document.createElement('td');
-        const status = document.createElement('td');
-        const owner = document.createElement('td');
-        const notes = document.createElement('td');
-        const edit = document.createElement('td');
-        id.innerHTML = location.locID;
-        name.innerHTML = location.name;
-        type.innerHTML = location.type;
-        status.innerHTML = location.status;
+        const cellNames = ['id', 'name', 'type', 'status', 'owner', 'notes', 'edit'];
+        const cells: {[key: string]: HTMLTableCellElement} = {};
+        for (const cellName of cellNames) {
+            const cell = document.createElement('td');
+            cells[cellName] = cell;
+        }
+        cells.id.innerHTML = location.locID;
+        cells.name.innerHTML = location.name;
+        cells.type.innerHTML = location.type;
+        cells.status.innerHTML = location.status;
         const owners = location.owners.split(',');
         if (owners.length > 2) {
-            owner.innerHTML = owners[0] + ` (<span class="hover" title="${owners.slice(1).join(', ')}">+${owners.length - 1}</span>)`;
+            cells.owner.innerHTML = owners[0] + ` (<span class="hover" title="${owners.slice(1).join(', ')}">+${owners.length - 1}</span>)`;
         } else {
-            owner.innerHTML = owners.join(', ');
+            cells.owner.innerHTML = owners.join(', ');
         }
-        notes.innerHTML = `<button onclick="viewNotes(${location.locID})">View</button>`;
-        edit.innerHTML = `<button>Edit</button>`;
-        row.appendChild(id);
-        row.appendChild(name);
-        row.appendChild(type);
-        row.appendChild(status);
-        row.appendChild(owner);
-        row.appendChild(notes);
-        row.appendChild(edit);
-        type.classList.add('list-type-' + location.type.toLowerCase());
-        status.classList.add('list-status-' + location.status.toLowerCase());
+        cells.notes.innerHTML = `<button onclick="viewNotes(${location.locID})">View</button>`;
+        if (owners.includes(user)) cells.edit.innerHTML = `<button>Edit</button>`;
+        for (const cellName of cellNames) {
+            row.appendChild(cells[cellName]);
+        }
+        cells.type.classList.add('list-type-' + location.type.toLowerCase());
+        cells.status.classList.add('list-status-' + location.status.toLowerCase());
         table?.appendChild(row);
+    }
+}
+
+async function loadUserInfo() {
+    const response = await fetch('/api/user', {
+        method: 'GET',
+        credentials: 'same-origin'
+    });
+    const data = await response.json();
+    const userName = document.getElementById('user-name') as HTMLSpanElement;
+    userName.innerHTML = data.discordName;
+    user = data.discordName;
+    const userAvatar = document.getElementById('user-avatar') as HTMLImageElement;
+    userAvatar.src = `https://cdn.discordapp.com/avatars/${data.discordID}/${data.discordAvatar}.png`;
+    if (data.discordAvatar == null) {
+        userAvatar.style.display = 'none';
     }
 }
 
@@ -58,6 +77,10 @@ document.getElementById('notes-close')?.addEventListener('click', () => {
     notesBox.style.display = 'none';
 });
 
-main();
+loadUserInfo().then(() => {
+    updateTable();
+});
 
 window.viewNotes = viewNotes;
+window.updateTable = updateTable;
+window.loadUserInfo = loadUserInfo;
