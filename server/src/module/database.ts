@@ -124,6 +124,11 @@ export class Database {
         const rows: RowDataPacket[] = notes ? notes[0] as RowDataPacket[] : [];
         return rows[0];
     }
+
+    async ping() {
+        if (this.connection === undefined) await this.connection;
+        await this.connection?.ping();
+    }
 }
 
 export enum BuilderStatus {

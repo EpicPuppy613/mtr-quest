@@ -130,4 +130,8 @@ app.get('/api/user', async ({ cookies }, response) => {
     return;
 });
 
+setInterval(async () => {
+    await db.ping();
+}, 60000);
+
 app.listen(port, () => console.log(`[${new Date().toISOString()}] App listening at http://localhost:${port}`));
