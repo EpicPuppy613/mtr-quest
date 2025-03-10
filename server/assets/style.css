@@ -10,7 +10,7 @@ a {
     color: white;
 }
 
-/* Buttons */
+/* Widgets */
 button {
     color: white;
     background-color: #379;
@@ -76,7 +76,7 @@ button:active {
     margin-left: 6px;
 }
 
-/* Location List Table */
+/* Location List Menu */
 #list-menu table {
     width: 100%;
     margin-top: 20px;
@@ -122,6 +122,52 @@ button:active {
 }
 .list-status-invalid {
     color: #f00;
+}
+
+/* Details Menu */
+#details-menu {
+    margin: 20px auto;
+    width: 500px;
+    align-items: center;
+    dominant-baseline: middle;
+}
+#details-menu ol {
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#details-menu ul {
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+#details-owners-list span {
+    padding: 4px;
+}
+#details-delete:not(:disabled) {
+    background-color: #c00;
+}
+.details-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+.details-row label {
+    padding: 4px;
+    font-weight: bold;
+}
+.details-row input, select, textarea {
+    flex-grow: 1;
+    color: white;
+    background-color: #379;
+    padding: 4px;
+    border: none;
+    border-radius: 4px;
+}
+input:disabled, select:disabled, button:disabled {
+    background-color: #256;
+    cursor: default;
+    filter: none;
 }
 
 /* Notes */

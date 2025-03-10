@@ -19,6 +19,7 @@
                 <label for="list-show-all">Show all locations</label>
                 <br>
                 <button id="list-refresh" onclick="updateTable()">Refresh</button>
+                <button id="list-new" onclick="createNew()">Create New</button>
             </div>
             <table>
                 <thead>
@@ -36,14 +37,104 @@
             </table>
         </div>
         <div id="details-menu" style="display: none">
-
+            <div class="details-row">
+                <label for="details-id">Location ID: <span id="details-id" style="font-weight: normal;"></span></label>
+            </div>
+            <div class="details-row">
+                <label for="details-name">Name</label><input type="text" id="details-name" maxlength="60" />
+            </div>
+            <div class="details-row">
+                <label for="details-type">Type*</label><select id="details-type">
+                    <option value="A">A - Visit</option>
+                    <option value="B">B - Parkour</option>
+                    <option value="C">C - Puzzle</option>
+                    <option value="D">D - Quiz</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 4px">
+                <strong>Type-Specific Requirements:</strong>
+            </div>
+            <div id="details-type-a" style="display: none;">
+                <ul style="margin-top: 0">
+                    <li>Requires one or more 3x3 area(s) for a quest point</li>
+                    <li>Coordinates should be specified in the notes</li>
+                    <li>If no coordinates are specified, it will be built outside one of the station's exits</li>
+                </ul>
+            </div>
+            <div id="details-type-b" style="display: none;">
+                One of the following options should be chosen:
+                <ol>
+                    <li>Build the parkour yourself</li>
+                    <ul>
+                        <li>Provide coordinates to the parkour in the notes</li>
+                        <li>The parkour will be tested and rated by EpicPuppy613</li>
+                    </ul>
+                    <li>Designate a location for the parkour</li>
+                    <ul>
+                        <li>Specify coordinates and any other layout guidelines in the notes</li>
+                        <li>Provide a target difficulty (1-5) and length in the notes</li>
+                        <li>Another player (probably EpicPuppy613) will build the parkour</li>
+                    </ul>
+                </ol>
+                If none of the options are correctly folowed, the location will be invalidated until it is fixed.
+            </div>
+            <div id="details-type-c" style="display: none;">
+                <ul>
+                    <li>Designate a large space either inside or outside the station for the puzzle</li>
+                    <li>Coordinates should be specified in the notes</li>
+                    <li>Provide a target difficulty (easy, medium, hard) in the notes</li>
+                    <li>A puzzle to fit the space and difficulty will be built in the space</li>
+                </ul>
+                If coordinates are not provided, or the space does not fit the requirements, the location will be invalidated until it is fixed.
+            </div>
+            <div id="details-type-d" style="display: none;">
+                <ul>
+                    <li>Put all quiz questions, possible answers, and correct answer(s) in the notes</li>
+                    <li>Coordinates should be specified in the notes</li>
+                    <li>A series of rooms to hold the quiz questions should be built</li>
+                    <li>These rooms should contain enough space to fit command blocks and signs for the quiz questions</li>
+                </ul>
+                If coordinates or questions are not provided, or the space does not fit the requirements of the quiz, the location will be invalidated until it is fixed.
+            </div>
+            <div>
+                <strong>Notes:</strong>
+            </div>
+            <div class="details-row">
+                <textarea id="details-notes" rows="10"></textarea>
+            </div>
+            <div class="details-row">
+                <label>Status*</label><select id="details-status">
+                    <option hidden value="active">Active - the quest point is built and quests are using it</option>
+                    <option hidden value="built">Built - the quest point is built</option>
+                    <option value="pending">Pending - the quest point will be set up when possible</option>
+                    <option value="wip">WIP - the quest point will not be set up</option>
+                    <option hidden value="invalid">Invalid - the quest point is not valid and needs attention</option>
+                </select>
+            </div>
+            <div class="details-row">
+                <label>Owner(s) </label><input type="text" id="details-owners" maxlength="60" /><button onclick="addOwner()">+ Add</button>
+            </div>
+            <div id="details-owners-error" style="color: red;" style="display: none"></div>
+            <div id="details-owners-list">
+                <div class="details-row">
+                    <span style="flex-grow: 1; text-align: left;">epicpuppy613</span><button>- Remove</button>
+                </div>
+            </div>
+            <div class="details-row">
+                <button id="details-cancel" style="flex-grow:2;" onclick="updateTable()">Cancel</button>
+                <button id="details-delete" style="flex-grow:1;" onclick="if (confirm('Are you sure you want to delete this?')) deleteLocation()">Delete*</button>
+                <button id="details-save" style="flex-grow:2;" onclick="saveLocation()">Save</button>
+            </div>
+            <div>
+                * These fields will not be editable after the location point is built
+            </div>
         </div>
         <div id="notes-popup" style="display: none;">
             <strong id="notes-name">Notes</strong>
             <p id="notes-content"></p>
             <button id="notes-close">Close</button>
         </div>
-        <footer>MTR Quest Dashboard v0.1.1</footer>
+        <footer>MTR Quest Dashboard v0.2.0</footer>
         <script src="assets/bundle.js" type="module" defer></script>
     </body>
 </html>
