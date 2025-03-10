@@ -15,7 +15,7 @@
 			async function load() {
 				const devmode = await fetch('/assets/devmode');
 				const data = await devmode.text();
-				if (data.length > 0) document.getElementById('login').href = 'https://discord.com/oauth2/authorize?client_id=1347319296870711347&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080&scope=identify+guilds.members.read';
+				if (data == "1") document.getElementById('login').href = 'https://discord.com/oauth2/authorize?client_id=1347319296870711347&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080&scope=identify+guilds.members.read';
 			}
 			load();
 		</script>
