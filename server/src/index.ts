@@ -177,6 +177,7 @@ app.put('/api/locations', async ({ cookies, body }, response) => {
     if (validate(response, typeof type !== 'string' || type.length === 0, 400, 'Bad Request')) return;
     if (validate(response, typeof status !== 'string' || status.length === 0, 400, 'Bad Request')) return;
     if (validate(response, typeof owners !== 'object' || !Array.isArray(owners), 400, 'Bad Request')) return;
+    await db.logChange(id.toString(), user, name, type, notes, status, owners);
     await db.updateLocation(id.toString(), name, type, notes, status, owners);
     response.status(200).send('OK');
     logger.info(`Loc update: ${name} (${id}) by ${getName(user)} (${user})`);

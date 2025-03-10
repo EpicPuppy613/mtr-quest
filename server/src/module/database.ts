@@ -206,6 +206,36 @@ export class Database {
         return nextId;
     }
 
+    async logChange(locId: string, user: string, name: string, type: string, notes: string, status: string, owners: string[]) {
+        if (!this.connected) await this.promise;
+        // Obtain current location data
+        const location = await this.connection?.query('SELECT * FROM locations WHERE locID = ? LIMIT 1', [locId]);
+        const rows: RowDataPacket[] = location ? location[0] as RowDataPacket[] : [];
+        if (rows.length === 0) return;
+        const loc = rows[0];
+        // Check for changes
+        const changes: string[] = [];
+        if (loc.name !== name) changes.push(`Nme ${loc.name} -> ${name}`);
+        if (loc.type !== type) changes.push(`Typ ${loc.type} -> ${type}`);
+        if (loc.notes !== notes) changes.push(`Not ${loc.notes.length} -> ${notes.length}`);
+        if (loc.status !== status) changes.push(`Sta ${loc.status} -> ${status}`);
+        const oldOwners = await this.getOwners(locId);
+        const oldOwnerIds = oldOwners.map((owner) => owner.ownerID);
+        const newOwnerIds = owners;
+        for (const owner of oldOwnerIds) {
+            if (!newOwnerIds.includes(owner)) {
+                changes.push(`- Own ${owner}`);
+            }
+        }
+        for (const owner of newOwnerIds) {
+            if (!oldOwnerIds.includes(owner)) {
+                changes.push(`+ Own ${owner}`);
+            }
+        }
+        // Log changes
+        if (changes.length) await this.connection?.query('INSERT INTO loc_changes (locID, user, changes) VALUES (?, ?, ?)', [locId, user, changes.join('; ')]);
+    }
+
     async ping() {
         if (!this.connected) await this.promise;
         await this.connection?.ping();
