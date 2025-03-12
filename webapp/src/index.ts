@@ -39,12 +39,11 @@ async function updateTable() {
     detailsMenu.style.display = 'none';
     table.innerHTML = '';
     const showAll = inputShowAll.checked;
-    const locations = await fetch('/api/locations', {
+    const q = new URLSearchParams();
+    q.append('showAll', showAll ? '1' : '0');
+    const locations = await fetch('/api/locations?' + q.toString(), {
         method: 'GET',
-        credentials: 'same-origin',
-        headers: {
-            'show-all': showAll ? '1' : '0',
-        }
+        credentials: 'same-origin'
     });
     const locationsData = await locations.json();
     for (const location of locationsData) {
@@ -93,12 +92,11 @@ async function loadUserInfo() {
 }
 
 async function loadEditPanel(locId: number) {
-    const response = await fetch(`/api/locations/details`, {
+    const q = new URLSearchParams();
+    q.append('id', locId.toString());
+    const response = await fetch(`/api/locations/details?` + q.toString(), {
         method: 'GET',
-        credentials: 'same-origin',
-        headers: {
-            'id': locId.toString(),
-        }
+        credentials: 'same-origin'
     });
     if (response.status !== 200) return;
     listMenu.style.display = 'none';
@@ -153,12 +151,11 @@ async function addOwner() {
         inputOwnerError.style.display = 'block';
         return;
     }
-    const userId = await fetch('/api/userid', {
+    const q = new URLSearchParams();
+    q.append('name', ownerName);
+    const userId = await fetch('/api/userid?' + q.toString(), {
         method: 'GET',
-        credentials: 'same-origin',
-        headers: {
-            'name': ownerName,
-        }
+        credentials: 'same-origin'
     });
     if (userId.status === 404) {
         inputOwnerError.innerHTML = 'User not found';
@@ -213,12 +210,11 @@ async function createNew() {
     }
     detailsOwnersList.innerHTML = '';
     owners = [];
-    const userId = await fetch('/api/userid', {
+    const q = new URLSearchParams();
+    q.append('name', user);
+    const userId = await fetch('/api/userid?' + q.toString(), {
         method: 'GET',
-        credentials: 'same-origin',
-        headers: {
-            'name': user,
-        }
+        credentials: 'same-origin'
     });
     if (userId.status === 404) {
         inputOwnerError.innerHTML = 'User not found';
@@ -245,12 +241,11 @@ async function createNew() {
 
 async function deleteLocation() {
     const locId = detailsId.innerHTML;
-    const response = await fetch(`/api/locations`, {
+    const q = new URLSearchParams();
+    q.append('id', locId);
+    const response = await fetch(`/api/locations?` + q.toString(), {
         method: 'DELETE',
-        credentials: 'same-origin',
-        headers: {
-            'id': locId,
-        }
+        credentials: 'same-origin'
     });
     if (response.status !== 200) return;
     updateTable();
