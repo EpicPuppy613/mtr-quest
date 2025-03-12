@@ -41,6 +41,15 @@ export class Database {
             [ssid, userId, key1, key2, builder, Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, discordName, discordAvatar]
         ); 
     }
+    async getSession(ssid: string) {
+        if (typeof ssid !== "string" || ssid.length !== 32) return;
+        if (!this.connected) await this.promise;
+        const result = await this.connection?.query('SELECT expires FROM sessions WHERE SSID = ? LIMIT 1', [Buffer.from(ssid, 'hex')]);
+        const rows: RowDataPacket[] = result ? result[0] as RowDataPacket[] : [];
+        // assume first session
+        const session = rows[0];
+        return session;
+    }
     async checkSession(ssid: string) {
         if (typeof ssid !== "string" || ssid.length !== 32) return false;
         if (!this.connected) await this.promise;

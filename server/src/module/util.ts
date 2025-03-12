@@ -4,6 +4,7 @@ import { APIGuildMember, APIUser, RESTPostOAuth2AccessTokenResult } from 'discor
 import { createHash } from 'crypto';
 const { clientId, clientSecret, devMode } = JSON.parse(readFileSync('config.json', 'utf-8')) as {clientId: string, clientSecret: string, devMode: boolean};
 
+
 export async function exchangeAccessToken(code: string): Promise<RESTPostOAuth2AccessTokenResult | null> {
     try {
         const tokenResponseData = await request('https://discord.com/api/oauth2/token', {
