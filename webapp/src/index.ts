@@ -116,12 +116,6 @@ async function loadEditPanel(locId: number) {
     detailsTypeB.style.display = data.type === 'B' ? 'block' : 'none';
     detailsTypeC.style.display = data.type === 'C' ? 'block' : 'none';
     detailsTypeD.style.display = data.type === 'D' ? 'block' : 'none';
-    detailsType.onchange = () => {
-        detailsTypeA.style.display = detailsType.value === 'A' ? 'block' : 'none';
-        detailsTypeB.style.display = detailsType.value === 'B' ? 'block' : 'none';
-        detailsTypeC.style.display = detailsType.value === 'C' ? 'block' : 'none';
-        detailsTypeD.style.display = detailsType.value === 'D' ? 'block' : 'none';
-    }
     detailsNotes.value = data.notes;
     detailsStatus.disabled = built;
     const statusOptions = detailsStatus.options;
@@ -292,6 +286,13 @@ document.getElementById('notes-close')?.addEventListener('click', () => {
     const notesBox = document.getElementById('notes-popup')!;
     notesBox.style.display = 'none';
 });
+
+detailsType.onchange = () => {
+    detailsTypeA.style.display = detailsType.value === 'A' ? 'block' : 'none';
+    detailsTypeB.style.display = detailsType.value === 'B' ? 'block' : 'none';
+    detailsTypeC.style.display = detailsType.value === 'C' ? 'block' : 'none';
+    detailsTypeD.style.display = detailsType.value === 'D' ? 'block' : 'none';
+}
 
 loadUserInfo().then(() => {
     updateTable();
