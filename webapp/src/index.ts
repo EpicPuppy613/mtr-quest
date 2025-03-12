@@ -34,9 +34,11 @@ async function viewNotes(locId: number) {
     notesContent.innerHTML = notesData.notes.replaceAll('\n', '<br>');
 }
 
-async function updateTable() {
+async function updateTable(nostate: boolean = false) {
     listMenu.style.display = 'block';
     detailsMenu.style.display = 'none';
+    if (!nostate) window.history.pushState({}, "", "?");
+    document.title = "Locations | MTR Quest";
     table.innerHTML = '';
     const showAll = inputShowAll.checked;
     const q = new URLSearchParams();
@@ -91,16 +93,24 @@ async function loadUserInfo() {
     }
 }
 
-async function loadEditPanel(locId: number) {
+async function loadEditPanel(locId: number, nostate: boolean = false) {
     const q = new URLSearchParams();
     q.append('id', locId.toString());
     const response = await fetch(`/api/locations/details?` + q.toString(), {
         method: 'GET',
         credentials: 'same-origin'
     });
-    if (response.status !== 200) return;
+    if (response.status !== 200) {
+        if (nostate) {
+            window.history.replaceState({}, "", "?");
+            updateTable(true);
+        }
+        return;
+    }
     listMenu.style.display = 'none';
     detailsMenu.style.display = 'block';
+    if (!nostate) window.history.pushState({edit: locId}, "", "?edit=" + locId);
+    document.title = "Edit " + locId + " | MTR Quest";
     const data = await response.json();
     const built = data.status === 'built' || data.status === 'active';
     detailsId.innerHTML = data.locID;
@@ -143,54 +153,11 @@ async function loadEditPanel(locId: number) {
     detailsDelete.disabled = built;
 }
 
-async function addOwner() {
-    inputOwnerError.style.display = 'none';
-    const ownerName = inputOwnerName.value;
-    if (ownerName.length === 0) {
-        inputOwnerError.innerHTML = 'Please enter a name';
-        inputOwnerError.style.display = 'block';
-        return;
-    }
-    const q = new URLSearchParams();
-    q.append('name', ownerName);
-    const userId = await fetch('/api/userid?' + q.toString(), {
-        method: 'GET',
-        credentials: 'same-origin'
-    });
-    if (userId.status === 404) {
-        inputOwnerError.innerHTML = 'User not found';
-        inputOwnerError.style.display = 'block';
-        return;
-    }
-    const userIdData = await userId.json();
-    const ownerId = userIdData.ID;
-    if (owners.includes(ownerId)) {
-        inputOwnerError.innerHTML = 'User already added';
-        inputOwnerError.style.display = 'block';
-        return;
-    }
-    owners.push(ownerId);
-    const ownerDiv = document.createElement('div');
-    ownerDiv.classList.add('details-row');
-    const ownerLabel = document.createElement('span');
-    ownerLabel.innerHTML = ownerName;
-    ownerLabel.style.flexGrow = '1';
-    ownerLabel.style.textAlign = 'left';
-    const removeButton = document.createElement('button');
-    removeButton.innerHTML = '- Remove';
-    removeButton.onclick = () => {
-        detailsOwnersList.removeChild(ownerDiv);
-        const index = owners.indexOf(ownerId);
-        if (index > -1) owners.splice(index, 1);
-    }
-    ownerDiv.appendChild(ownerLabel);
-    if (ownerName !== user) ownerDiv.appendChild(removeButton);
-    detailsOwnersList.appendChild(ownerDiv);
-}
-
-async function createNew() {
+async function createNew(nostate: boolean = false) {
     listMenu.style.display = 'none';
     detailsMenu.style.display = 'block';
+    if (!nostate) window.history.pushState({edit: 0}, "", "?edit=0");
+    document.title = "Create New | MTR Quest";
     detailsId.innerHTML = 'Not Assigned';
     detailsName.value = '';
     detailsType.disabled = false;
@@ -236,6 +203,51 @@ async function createNew() {
     ownerLabel.style.flexGrow = '1';
     ownerLabel.style.textAlign = 'left';
     ownerDiv.appendChild(ownerLabel);
+    detailsOwnersList.appendChild(ownerDiv);
+}
+
+async function addOwner() {
+    inputOwnerError.style.display = 'none';
+    const ownerName = inputOwnerName.value;
+    if (ownerName.length === 0) {
+        inputOwnerError.innerHTML = 'Please enter a name';
+        inputOwnerError.style.display = 'block';
+        return;
+    }
+    const q = new URLSearchParams();
+    q.append('name', ownerName);
+    const userId = await fetch('/api/userid?' + q.toString(), {
+        method: 'GET',
+        credentials: 'same-origin'
+    });
+    if (userId.status === 404) {
+        inputOwnerError.innerHTML = 'User not found';
+        inputOwnerError.style.display = 'block';
+        return;
+    }
+    const userIdData = await userId.json();
+    const ownerId = userIdData.ID;
+    if (owners.includes(ownerId)) {
+        inputOwnerError.innerHTML = 'User already added';
+        inputOwnerError.style.display = 'block';
+        return;
+    }
+    owners.push(ownerId);
+    const ownerDiv = document.createElement('div');
+    ownerDiv.classList.add('details-row');
+    const ownerLabel = document.createElement('span');
+    ownerLabel.innerHTML = ownerName;
+    ownerLabel.style.flexGrow = '1';
+    ownerLabel.style.textAlign = 'left';
+    const removeButton = document.createElement('button');
+    removeButton.innerHTML = '- Remove';
+    removeButton.onclick = () => {
+        detailsOwnersList.removeChild(ownerDiv);
+        const index = owners.indexOf(ownerId);
+        if (index > -1) owners.splice(index, 1);
+    }
+    ownerDiv.appendChild(ownerLabel);
+    if (ownerName !== user) ownerDiv.appendChild(removeButton);
     detailsOwnersList.appendChild(ownerDiv);
 }
 
@@ -290,7 +302,24 @@ detailsType.onchange = () => {
 }
 
 loadUserInfo().then(() => {
-    updateTable();
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+
+    const edit = params.get('edit');
+    if (edit === null) {
+        updateTable(true);
+        return;
+    }
+    const num = parseInt(edit);
+    if (num == 0) createNew(true);
+    else if (num > 0) loadEditPanel(num, true);
+});
+
+window.addEventListener('popstate', (e) => {
+    const state = e.state;
+    if (!state || !state.edit) updateTable(true);
+    if (state.edit == 0) createNew(true);
+    else if (state.edit > 0) loadEditPanel(state.edit, true);
 });
 
 window.viewNotes = viewNotes;

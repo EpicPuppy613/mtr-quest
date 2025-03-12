@@ -44,7 +44,7 @@ export class Database {
     async getSession(ssid: string) {
         if (typeof ssid !== "string" || ssid.length !== 32) return;
         if (!this.connected) await this.promise;
-        const result = await this.connection?.query('SELECT expires FROM sessions WHERE SSID = ? LIMIT 1', [Buffer.from(ssid, 'hex')]);
+        const result = await this.connection?.query('SELECT * FROM sessions WHERE SSID = ? LIMIT 1', [Buffer.from(ssid, 'hex')]);
         const rows: RowDataPacket[] = result ? result[0] as RowDataPacket[] : [];
         // assume first session
         const session = rows[0];
