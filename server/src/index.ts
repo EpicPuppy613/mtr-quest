@@ -4,10 +4,11 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { readFileSync } from 'fs';
 import { endAuth, exchangeAccessToken, generateSessionToken, getMemberInfo, getUserInfo } from './module/util.js';
-import { BuilderStatus, Database } from './module/database.js';
+import { Database } from './module/database.js';
 import { APIGuildMember, APIUser, RESTPostOAuth2AccessTokenResult } from 'discord.js';
 import winston from 'winston';
 import { Cache } from './module/cache.js';
+import { getRandomValues } from 'crypto';
 const { port } = JSON.parse(readFileSync('config.json', 'utf-8')) as {port: number};
 
 const logger = winston.createLogger({
@@ -51,7 +52,7 @@ app.get('/', async ({ query, cookies }, response) => {
             const member = await getMemberInfo(accessToken.access_token) as APIGuildMember;
             if (validate(response, member === null, 401, 'Unauthorized')) return;
             await endAuth(accessToken.access_token);
-            const keys = crypto.getRandomValues(new Uint32Array(2));
+            const keys = getRandomValues(new Uint32Array(2));
             const session = generateSessionToken(user.id, keys[0].toString(), keys[1].toString());
             await db.addSession(session, user.id, keys[0].toString(), keys[1].toString(), member.roles.includes('998873642119208981'), user.username, user.avatar);
             response.cookie('ssid', session.toString('hex'), { maxAge: accessToken.expires_in * 1000 });
