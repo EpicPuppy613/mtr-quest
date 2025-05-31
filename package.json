@@ -17,6 +17,7 @@
   },
   "workspaces": [
     "webapp",
-    "server"
+    "server",
+    "datapack"
   ]
 }

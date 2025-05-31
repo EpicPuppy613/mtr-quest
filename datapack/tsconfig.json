@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "outDir": "./run/",
+        "sourceMap": true,
+        "strict": true,
+        "noImplicitReturns": true,
+        "noImplicitAny": true,
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "target": "ESNext",
+        "allowJs": true,
+        "esModuleInterop": true,
+        "lib": [
+            "ES2023"
+        ]
+    },
+    "include": [
+        "./src/**/*",
+        "src/webpack.d.ts"
+    ]
+}

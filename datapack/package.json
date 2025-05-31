@@ -1,0 +1,19 @@
+{
+  "name": "datapack",
+  "version": "2.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "EpicPuppy613",
+  "type": "module",
+  "main": "run/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build&&node run/index"
+  },
+  "dependencies": {
+    "@epicpuppy-dev/script-utils": "^1.0.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
