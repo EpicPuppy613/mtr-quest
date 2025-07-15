@@ -1,0 +1,5 @@
+due to migration to the web dashboard and the addition of the database storage location, it will be very difficult to add or modify quest points.
+
+location.js = uses points.csv to generate the .mcfunction files that initialize and run the quest points
+quest.js = uses quest.json to generate the .mcfunction file used to manage that quest
+quests.js = uses quests.csv and runs quest.js for every quest in the file
